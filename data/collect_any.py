@@ -66,10 +66,13 @@ class CollectAny:
         if controllers_data is not None:    
             for controller_name, controller_data in controllers_data.items():
                 episode_data[controller_name] = controller_data
-        if sensors_data is not None:    
+        if sensors_data is not None:
+            # print("Available sensor data:", list(sensors_data.keys()))
             for sensor_name, sensor_data in sensors_data.items():
+                # print(f"Processing {sensor_name}, data type: {type(sensor_data)}")
+                # if isinstance(sensor_data, dict):
+                    # print(f"Sub-keys: {list(sensor_data.keys())}")
                 episode_data[sensor_name] = sensor_data
-        
         if self.move_check:
             if self.last_controller_data is None:
                 self.last_controller_data = controllers_data
@@ -114,6 +117,9 @@ class CollectAny:
             json.dump(self.condition, f, ensure_ascii=False, indent=4)
         
     def write(self, episode_id=None):
+        # print("Episode data keys:", self.episode[0].keys())
+        # for controller_name in self.episode[0].keys():
+            # print(f"Controller {controller_name} has items:", list(self.episode[0][controller_name].keys()))
         save_path = os.path.join(self.condition["save_path"], f"{self.condition['task_name']}/")
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -134,7 +140,7 @@ class CollectAny:
         # print(f"WRITE called in PID={os.getpid()} TID={threading.get_ident()}")
         with h5py.File(hdf5_path, "w") as f:
             obs = f
-            # print(self.episode[0])
+            print(self.episode[0])
             print(self.episode[0].keys())
             for controller_name in self.episode[0].keys():
                 controller_group = obs.create_group(controller_name)
@@ -142,6 +148,11 @@ class CollectAny:
                     data = self.get_item(controller_name, item)
                     controller_group.create_dataset(item, data=data)
         debug_print("collect_any", f"write to {hdf5_path}", "INFO")
+        # if os.path.exists(hdf5_path):
+        #     file_size = os.path.getsize(hdf5_path)
+        #     print(f"File successfully written. Size: {file_size} bytes")
+        # else:
+        #     print("ERROR: File was not created!")
         # reset the episode
         self.episode = []
         self.episode_index += 1

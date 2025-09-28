@@ -1,0 +1,13 @@
+{
+    "robot": "piper_single",
+    "save_path": "./datasets/",
+    "task_name": "test",
+    "save_format": "hdf5",
+    "save_freq": 10,
+    "left_arm": [
+        "joint",
+        "qpos",
+        "gripper"
+    ],
+    "orbbec_camera": []
+}

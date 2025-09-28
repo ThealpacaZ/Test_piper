@@ -8,8 +8,8 @@ import time
 import json
 import h5py
 
-from controller.TestArm_controller import TestArmController
-from sensor.TestVision_sensor import TestVisonSensor
+from controller.arm_controller import ArmController
+from sensor.VisionROS_sensor import VisionROSensor
 
 from data.collect_any import CollectAny
 
@@ -49,7 +49,7 @@ class Robot:
             if key in self.sensors:
                 for sensor in self.sensors[key].values():
                     sensor.set_collect_info(value)
-    
+
     def get(self):
         controller_data = {}
         sensor_data = {}
@@ -60,11 +60,14 @@ class Robot:
                     controller_data[controller_name] = controller.get()
 
         if self.sensors is not None:
-            for type_name, sensor_type in self.sensors.items(): 
+            for type_name, sensor_type in self.sensors.items():
                 for sensor_name, sensor in sensor_type.items():
-                    sensor_data[sensor_name] = sensor.get()
-       
-        return [controller_data, sensor_data]
+                    sensor_data[sensor_name] = sensor.get_image()
+
+        return {
+            "controller": controller_data,
+            "sensor": sensor_data
+        }
     
     def collect(self, data):
         self.collection.collect(data[0], data[1])
