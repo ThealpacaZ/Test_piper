@@ -35,49 +35,32 @@ from openpi.training import data_loader as _data_loader
 
 class PI0_DUAL:
     # def __init__(self, task_name,train_config_name,model_name,checkpoint_id):
-    def __init__(self, model_path, task_name):
-        self.task_name = task_name
-
-        train_config_name = "pi0_base_aloha_robotwin_lora"
+    def __init__(self, model_path):
+        train_config_name = "pi0_aloha"
         config = _config.get_config(train_config_name)
         print("get config success!")
         self.policy = _policy_config.create_trained_policy(config, model_path)
         print("loading model success!")
-        self.img_size = (224,224)
         self.observation_window = None
-        self.random_set_language()
 
-    # set img_size
-    def set_img_size(self,img_size):
-        self.img_size = img_size
-    
-    # set language randomly
-    def random_set_language(self):
-        # json_Path =f"datasets/instructions/{self.task_name}.json"
-        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        json_Path = os.path.join(root_dir, "task_instructions", f"{self.task_name}.json")
-        with open(json_Path, 'r') as f_instr:
-            instruction_dict = json.load(f_instr)
-        instructions = instruction_dict['instructions']
-        instruction = np.random.choice(instructions)
-        self.instruction = instruction
-        print(f"successfully set instruction:{instruction}")
-    
     # Update the observation window buffer
     def update_observation_window(self, img_arr, state):
-        img_front, img_right, img_left, puppet_arm = img_arr[0], img_arr[1], img_arr[2], state
-        img_front = np.transpose(img_front, (2, 0, 1))
-        img_right = np.transpose(img_right, (2, 0, 1))
-        img_left = np.transpose(img_left, (2, 0, 1))
-
+        img_right=np.transpose(img_arr[0], (2, 0, 1))
+        img_left=np.transpose(img_arr[1], (2, 0, 1))
+        img_high=np.transpose(img_arr[2], (2, 0, 1))
+        img_low=np.transpose(img_arr[3], (2, 0, 1))
+        print(img_left.shape)
+        print(img_high.shape)
+        print(img_right.shape)
         self.observation_window = {
             "state": state,
             "images": {
-                "cam_high": img_front,
+                "cam_high": img_high,
+                "cam_low":img_low,
                 "cam_left_wrist": img_left,
                 "cam_right_wrist": img_right,
             },
-            "prompt": self.instruction,
+            "prompt": 'Hold a tomato with left arm and keep the right arm still',
         }
         # print(state)
 
@@ -90,55 +73,39 @@ class PI0_DUAL:
         self.observation_window = None
         print("successfully unset obs and language intruction")
 
+
 class PI0_SINGLE:
-    def __init__(self, task_name,train_config_name,model_name,checkpoint_id):
+    def __init__(self, train_config_name,checkpoint_id):
         self.train_config_name = train_config_name
-        self.task_name = task_name
-        self.model_name = model_name
+        self.instruction = ''
         self.checkpoint_id = checkpoint_id
 
         config = _config.get_config(self.train_config_name)
-        self.policy = _policy_config.create_trained_policy(config, f"policy/openpi/checkpoints/{self.train_config_name}/{self.model_name}/{self.checkpoint_id}")
+        self.policy = _policy_config.create_trained_policy(config,checkpoint_id)
         print("loading model success!")
         self.img_size = (224,224)
         self.observation_window = None
-        self.random_set_language()
 
     # set img_size
     def set_img_size(self,img_size):
         self.img_size = img_size
-    
-    # set language randomly
-    def random_set_language(self):
-        json_Path =f"datasets/instructions/{self.task_name}.json"
-        with open(json_Path, 'r') as f_instr:
-            instruction_dict = json.load(f_instr)
-        instructions = instruction_dict['instructions']
-        instruction = np.random.choice(instructions)
-        self.instruction = instruction
-        print(f"successfully set instruction:{instruction}")
-    
-    # Update the observation window buffer
-    def update_observation_window(self, img_arr, state):
-        img_front, img_right = img_arr[0], img_arr[1]
+    def update_observation_window(self, img_arr, state,gripper):
+        img_right = img_arr[0]
         # (480,640,3) -> (3,480,640)
-        img_front = np.transpose(img_front, (2, 0, 1))
-        img_right = np.transpose(img_right, (2, 0, 1))
+        img_front = np.zeros_like(img_right)
         img_left = np.zeros_like(img_front)
         state = np.pad(state, (0, 8), mode='constant', constant_values=0)
         self.observation_window = {
-            "state": state,
-            "images": {
-                "cam_high": img_front,
-                "cam_left_wrist": img_left,
-                "cam_right_wrist": img_right,
-            },
-            "prompt": self.instruction,
+            "observation/joint_position": state,
+            "observation/exterior_image_1_left":img_front,
+            "observation/wrist_image_left":img_right,
+            "prompt": 'grasp the bottle',
+            "observation/gripper_position":gripper
         }
-
+   
     def get_action(self):
         assert (self.observation_window is not None), "update observation_window first!"
-        return self.policy.infer(self.observation_window)["actions"][:,:8]
+        return self.policy.infer(self.observation_window)["actions"]
 
     def reset_obsrvationwindows(self):
         self.instruction = None

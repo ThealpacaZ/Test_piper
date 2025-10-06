@@ -4,7 +4,7 @@ import os
 from data.collect_any import CollectAny
 from data.generate_lerobot import MyLerobotDataset
 import h5py
-from utils.data_handler import *
+from Utils.data_handler import *
 
 '''
 Single-arm lerobot, simulated in libero format. The default robot arm has 6 degrees of freedom plus 1 gripper degree of freedom. 

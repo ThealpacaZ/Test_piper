@@ -5,9 +5,9 @@ import numpy as np
 
 from my_robot.base_robot import Robot
 
-from controller.TestArm_controller import TestArmController
-from sensor.TestVision_sensor import TestVisonSensor
-from utils.data_handler import debug_print
+from Controller.TestArm_controller import TestArmController
+from Sensor.TestVision_sensor import TestVisonSensor
+from Utils.data_handler import debug_print
 from data.collect_any import CollectAny
 
 condition = {

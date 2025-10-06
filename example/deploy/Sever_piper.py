@@ -6,7 +6,7 @@ import time
 
 from utils.bisocket import BiSocket
 
-from policy.openpi.inference_model import PI0_SINGLE
+from policy.openpi.inference_model import PI0_DUAL
 from utils.data_handler import debug_print
 
 class Server:
@@ -28,6 +28,7 @@ class Server:
         self.model.update_observation_window(img_arr, state)
         # 获取 PI0 模型预测的动作序列
         action_chunk = self.model.get_action()
+      
         return {"action_chunk": action_chunk}
 
     def close(self):
@@ -39,15 +40,12 @@ if __name__ == "__main__":
     import os
     os.environ["INFO_LEVEL"] = "DEBUG"
 
-    ip = "127.0.0.1"
-    port = 10000
+    ip = "0.0.0.0"
+    port = 8080
 
     # 初始化 PI0 模型（替换 TestModel）
     # 注意：需要填写实际的模型路径和任务名称
-    model = PI0_SINGLE(
-        model_path="path/to/pi0_model",  # PI0 模型权重路径
-        task_name="your_task_name"       # 任务名称（对应指令文件）
-    )
+    model = PI0_DUAL("/root/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel")
 
     server = Server(model)
 

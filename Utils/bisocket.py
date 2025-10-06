@@ -1,8 +1,8 @@
 import socket
 import pickle
 from threading import Thread, Event
-
-from utils.data_handler import debug_print
+import traceback
+from Utils.data_handler import debug_print
 
 class BiSocket:
     '''
@@ -71,6 +71,7 @@ class BiSocket:
                             self.handler(message)
                     except Exception as e:
                         debug_print("BiSocket",f"Handler error: {e}", "ERROR")
+                        traceback.print_exc()
         finally:
             self.close()
 

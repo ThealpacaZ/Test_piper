@@ -1,15 +1,15 @@
 import sys
-from utils.websocket_client_policy import WebsocketClientPolicy
+
 sys.path.append("./")
 
 from typing import List
 import numpy as np
 
-from utils.data_handler import debug_print
+from Utils.data_handler import debug_print
 class Args:
     host: str = "localhost"      # 你的服务器地址
     port: int = 8000             # 你的服务器端口
-client = WebsocketClientPolicy(Args.host, Args.port)
+
 class Controller:
     def __init__(self):
         self.name = "controller"

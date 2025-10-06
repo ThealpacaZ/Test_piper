@@ -7,7 +7,7 @@ import numpy as np
 DEBUG = False
 Release = True
 
-from utils.data_handler import debug_print
+from Utils.data_handler import debug_print
 
 def worker(process_id: int, process_name: str, time_event: Event, result_array: Array, result_lock: Lock):
     '''

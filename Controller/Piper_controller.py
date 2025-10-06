@@ -1,7 +1,7 @@
 import sys
 sys.path.append("./")
 
-from controller.arm_controller import ArmController
+from Controller.arm_controller import ArmController
 
 from piper_sdk import *
 import numpy as np
@@ -106,16 +106,15 @@ def enable_fun(piper:C_PiperInterface_V2):
 
 if __name__=="__main__":
     controller = PiperController("test_piper")
-    controller.set_up("can0")
-    print(controller.get_state())
-    
-    controller.set_gripper(0.2)
-    controller.set_joint(np.array([0.1,0.1,-0.2,0.3,-0.2,0.5]))
+    c=PiperController("test")
+    b=PiperController("t")
+    b.set_up('can1')
+    c.set_up('can0')
+    c.set_joint(np.array([0.9,0.0,0.0,0.0,0.0,0.0]))
+    b.set_joint(np.array([0.5,0.0,0.0,0.0,0.0,0.0]))
+   
+    print("SUCCESS")
     time.sleep(1)
-    print(controller.get_gripper())
-    print(controller.get_state())
 
-    controller.set_position(np.array([0.057, 0.0, 0.260, 0.0, 0.085, 0.0]))
-    time.sleep(1)
-    print(controller.get_gripper())
-    print(controller.get_state())
+   
+    

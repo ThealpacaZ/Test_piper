@@ -1,6 +1,6 @@
 import sys
 sys.path.append("./")
-from utils.data_handler import debug_print
+from Utils.data_handler import debug_print
 
 import h5py
 import numpy as np

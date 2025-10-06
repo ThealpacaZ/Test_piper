@@ -8,12 +8,10 @@ import time
 import json
 import h5py
 
-from controller.TestArm_controller import TestArmController
-from sensor.TestVision_sensor import TestVisonSensor
 
 from data.collect_any import CollectAny
 
-from utils.data_handler import debug_print, hdf5_groups_to_dict
+from Utils.data_handler import debug_print, hdf5_groups_to_dict
 
 import cv2
 

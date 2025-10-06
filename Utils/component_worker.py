@@ -1,12 +1,12 @@
 import sys
 sys.path.append("./")
-from controller import *
+from Controller import *
 import time
 from typing import *
 
 from multiprocessing import Event, Semaphore, Process, Value, Manager
 
-from utils.data_handler import debug_print, DataBuffer
+from Utils.data_handler import debug_print, DataBuffer
 
 import importlib
 
@@ -85,10 +85,10 @@ if __name__ == "__main__":
     import os
     os.environ["INFO_LEVEL"] = "DEBUG"
 
-    from sensor.TestVision_sensor import TestVisonSensor
-    from controller.TestArm_controller import TestArmController
-    from utils.time_scheduler import TimeScheduler
-    from utils.data_handler import is_enter_pressed
+    from Sensor.TestVision_sensor import TestVisonSensor
+    from Controller.TestArm_controller import TestArmController
+    from Utils.time_scheduler import TimeScheduler
+    from Utils.data_handler import is_enter_pressed
 
     # 初始化共享操作
     processes = []

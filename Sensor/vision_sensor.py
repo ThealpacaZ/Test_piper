@@ -1,7 +1,8 @@
+
 import sys
 sys.path.append("./")
 
-from sensor.sensor import Sensor
+from Sensor.sensor import Sensor
 
 class VisionSensor(Sensor):
     def __init__(self):
@@ -15,13 +16,4 @@ class VisionSensor(Sensor):
         image = self.get_image()
         if "color" in self.collect_info:
             image_info["color"] = image["color"]
-        if "depth" in self.collect_info:
-            image_info["depth"] = image["depth"]
-        if "point_cloud" in self.collect_info:
-            image_info["point_cloud"] = image["point_cloud"]
-        
         return image_info
-
-    
-    
-

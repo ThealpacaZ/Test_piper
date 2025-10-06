@@ -3,8 +3,8 @@ sys.path.append("./")
 
 import numpy as np
 
-from controller.controller import Controller
-from utils.data_handler import debug_print
+from Controller.controller import Controller
+from Utils.data_handler import debug_print
 from typing import Dict, Any
 
 class ArmController(Controller):

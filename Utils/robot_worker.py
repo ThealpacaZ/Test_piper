@@ -1,12 +1,12 @@
 import sys
 sys.path.append("./")
-from controller import *
+from Controller import *
 import time
 from typing import *
 
 from multiprocessing import Event, Manager, Barrier
 
-from utils.data_handler import debug_print, DataBuffer
+from Utils.data_handler import debug_print, DataBuffer
 
 def RobotWorker(robot_class, start_episode,
                 time_lock: Barrier, start_event: Event, finish_event: Event, process_name: str, 

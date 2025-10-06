@@ -4,9 +4,9 @@ sys.path.append('./')
 import socket
 import time
 
-from utils.bisocket import BiSocket
+from Utils.bisocket import BiSocket
 from policy.test_policy.inference_model import TestModel
-from utils.data_handler import debug_print
+from Utils.data_handler import debug_print
 
 class Server:
     def __init__(self, model, control_freq=10):

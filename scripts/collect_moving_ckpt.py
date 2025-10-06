@@ -10,9 +10,9 @@ import numpy as np
 from my_robot.test_robot import TestRobot
 from data.collect_any import CollectAny
 
-from utils.time_scheduler import TimeScheduler
-from utils.robot_worker import RobotWorker
-from utils.data_handler import debug_print
+from Utils.time_scheduler import TimeScheduler
+from Utils.robot_worker import RobotWorker
+from Utils.data_handler import debug_print
 
 ARM_INFO_NAME = ["qpos", "gripper"]
 
